@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+cmd = ARGV.shift
+
+path = `which #{cmd}`.chomp
+
+require 'stackprof'
+ex = nil
+StackProf.run(mode: :cpu, out: 'stackprof-out') do
+  begin
+    load path
+  rescue Exception => e
+    ex = e
+  end
+end
+
+raise ex if ex
