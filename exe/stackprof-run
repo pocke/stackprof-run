@@ -4,6 +4,8 @@ cmd = ARGV.shift
 
 path = `which #{cmd}`.chomp
 
+$PROGRAM_NAME = cmd
+
 mode = ENV['STACKPROF_MODE']&.to_sym || :cpu
 out = ENV['STACKPROF_OUT'] || 'stackprof-out'
 
