@@ -4,13 +4,15 @@ cmd = ARGV.shift
 
 path = `which #{cmd}`.chomp
 
+mode = ENV['STACKPROF_MODE']&.to_sym || :cpu
+out = ENV['STACKPROF_OUT'] || 'stackprof-out'
+
 require 'stackprof'
 ex = nil
-StackProf.run(mode: :cpu, out: 'stackprof-out') do
+StackProf.run(mode: mode, out: out) do
   begin
     load path
-  rescue Exception => e
-    ex = e
+  rescue Exception => ex
   end
 end
 
