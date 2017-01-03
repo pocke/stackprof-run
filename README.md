@@ -1,36 +1,59 @@
-# Stackprof::Run
+# stackprof-run
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/stackprof/run`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Run a ruby script with [stackprof](https://github.com/tmm1/stackprof).
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'stackprof-run'
+```sh
+$ gem install stackprof-run
 ```
 
-And then execute:
+## Basic Usage
 
-    $ bundle
+`stackprof-run` executes received command with stackprof.
 
-Or install it yourself as:
+```sh
+# Run RuboCop with stackprof
+$ stackprof-run rubocop some_ruby_file.rb
 
-    $ gem install stackprof-run
+# Run a rake task
+$ stackprof-run bin/rake some_task
+```
 
-## Usage
+## Advanced Usage
 
-TODO: Write usage instructions here
+### Specify output filename
 
-## Development
+`stackprof-run` puts result to `./stackprof-out` in default. You can specify the filename by an environment variable.
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```sh
+$ STACKPROF_OUT=stackprof_result stackprof-run some_ruby_command
+$ file stackprof_result
+stackprof_result: data
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+### Specify stackprof mode
+
+`stackprof-run` executes stackprof with `cpu` mode in default. You can specify the mode by an environment variable.
+
+```sh
+$ STACKPROF_MODE=wall stackprof-run some_ruby_command
+```
+
+
+
+## Known issue
+
+This gem dependents `which` command, so, it does not work in Windows.
+
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/stackprof-run.
+Bug reports and pull requests are welcome on GitHub at https://github.com/pocke/stackprof-run.
 
+License
+-------
+
+These codes are licensed under CC0.
+
+[![CC0](http://i.creativecommons.org/p/zero/1.0/88x31.png "CC0")](http://creativecommons.org/publicdomain/zero/1.0/deed.en)
