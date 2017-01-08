@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Masataka Kuwabara"]
   spec.email         = ["p.ck.t22@gmail.com"]
 
-  spec.summary       = %q{}
-  spec.description   = %q{}
+  spec.summary       = %q{Run a ruby script with stackprof.}
+  spec.description   = %q{Run a ruby script with stackprof.}
   spec.homepage      = "https://github.com/pocke/stackprof-run"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
