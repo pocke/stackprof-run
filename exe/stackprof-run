@@ -11,8 +11,9 @@ interval = nil
 aggregate = true
 raw = false
 
-opt.on('-m MODE', '--mode=MODE'){|v| mode = v.to_sym}
-opt.on('-o FILE', '--out=FILE'){|v| out = v}
+opt.banner = 'Usage: stackprof-run [options] command [command options]'
+opt.on('-m MODE', '--mode=MODE', ':cpu(default), :wall, :object'){|v| mode = v.to_sym}
+opt.on('-o FILE', '--out=FILE', 'Output file name. (default: stackprof-out)'){|v| out = v}
 opt.on('-i INTERVAL', '--interval=INTERVAL'){|v| interval = v.to_i}
 opt.on('-no-aggregate'){|v| aggregate = false}
 opt.on('-r', '--raw'){|v| raw = true}

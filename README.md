@@ -20,24 +20,16 @@ $ stackprof-run rubocop some_ruby_file.rb
 $ stackprof-run bin/rake some_task
 ```
 
-## Advanced Usage
+### Options
 
-### Specify output filename
-
-`stackprof-run` puts result to `./stackprof-out` in default. You can specify the filename by an environment variable.
-
-```sh
-$ STACKPROF_OUT=stackprof_result stackprof-run some_ruby_command
-$ file stackprof_result
-stackprof_result: data
-```
-
-### Specify stackprof mode
-
-`stackprof-run` executes stackprof with `cpu` mode in default. You can specify the mode by an environment variable.
-
-```sh
-$ STACKPROF_MODE=wall stackprof-run some_ruby_command
+```bash
+$ stackprof-run --help
+Usage: stackprof-run [options] command [command options]
+    -m, --mode=MODE                  :cpu(default), :wall, :object
+    -o, --out=FILE                   Output file name. (default: stackprof-out)
+    -i, --interval=INTERVAL
+    -no-aggregate
+    -r, --raw
 ```
 
 
