@@ -7,9 +7,15 @@ opt = OptionParser.new
 
 mode = ENV['STACKPROF_MODE']&.to_sym || :cpu
 out = ENV['STACKPROF_OUT'] || 'stackprof-out'
+interval = nil
+aggregate = true
+raw = false
 
 opt.on('-m MODE', '--mode=MODE'){|v| mode = v.to_sym}
 opt.on('-o FILE', '--out=FILE'){|v| out = v}
+opt.on('-i INTERVAL', '--interval=INTERVAL'){|v| interval = v.to_i}
+opt.on('-no-aggregate'){|v| aggregate = false}
+opt.on('-r', '--raw'){|v| raw = true}
 
 opt.order!(ARGV)
 
@@ -24,7 +30,7 @@ path = `which #{cmd}`.chomp
 $PROGRAM_NAME = cmd
 
 ex = nil
-StackProf.run(mode: mode, out: out) do
+StackProf.run(mode: mode, out: out, interval: interval, aggregate: aggregate, raw: raw) do
   begin
     load path
   rescue Exception => ex
