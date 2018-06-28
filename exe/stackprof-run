@@ -3,39 +3,71 @@
 require 'optparse'
 require 'stackprof'
 
-opt = OptionParser.new
+def main
+  opt = OptionParser.new
 
-mode = ENV['STACKPROF_MODE']&.to_sym || :cpu
-out = ENV['STACKPROF_OUT'] || 'stackprof-out'
-interval = nil
-aggregate = true
-raw = false
+  params = {
+    mode: ENV['STACKPROF_MODE']&.to_sym || :cpu,
+    out: ENV['STACKPROF_OUT'] || 'stackprof-out'
+  }
 
-opt.banner = 'Usage: stackprof-run [options] command [command options]'
-opt.on('-m MODE', '--mode=MODE', ':cpu(default), :wall, :object'){|v| mode = v.to_sym}
-opt.on('-o FILE', '--out=FILE', 'Output file name. (default: stackprof-out)'){|v| out = v}
-opt.on('-i INTERVAL', '--interval=INTERVAL'){|v| interval = v.to_i}
-opt.on('-no-aggregate'){|v| aggregate = false}
-opt.on('-r', '--raw'){|v| raw = true}
+  opt.banner = 'Usage: stackprof-run [options] command [command options]'
+  opt.on('-m MODE', '--mode=MODE', ':cpu(default), :wall, :object', &:to_sym)
+  opt.on('-o FILE', '--out=FILE', 'Output file name. (default: stackprof-out)')
+  opt.on('-i INTERVAL', '--interval=INTERVAL', &:to_i)
+  opt.on('-no-aggregate')
+  opt.on('-r', '--raw')
+  opt.on('-e command')
 
-opt.order!(ARGV)
+  opt.order!(ARGV, into: params)
 
-cmd = ARGV.shift
-unless cmd
-  puts opt.help
-  exit 1
-end
-
-path = `which #{cmd}`.chomp
-
-$PROGRAM_NAME = cmd
-
-ex = nil
-StackProf.run(mode: mode, out: out, interval: interval, aggregate: aggregate, raw: raw) do
-  begin
-    load path
-  rescue Exception => ex
+  if params[:e]
+    exec_code params
+  else
+    exec_command opt, params
   end
 end
 
-raise ex if ex
+def exec_command(opt, params)
+  cmd = ARGV.shift
+  unless cmd
+    puts opt.help
+    exit 1
+  end
+
+  path =
+    if File.exist?(cmd)
+      cmd
+    else
+      `which #{cmd}`.chomp
+    end
+
+  $PROGRAM_NAME = cmd
+
+  exec(params) do
+    load path
+  end
+end
+
+def exec_code(params)
+  exec(params) do
+    eval params[:e]
+  end
+end
+
+def exec(params)
+  opt = params.slice(:mode, :out, :interval, :raw).tap do |o|
+    o[:aggregate] = !!params[:'no-aggregate']
+  end
+  ex = nil
+  StackProf.run(opt) do
+    begin
+      yield
+    rescue Exception => ex
+    end
+  end
+
+  raise ex if ex
+end
+
+main
