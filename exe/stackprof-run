@@ -56,9 +56,13 @@ def exec_code(params)
 end
 
 def exec(params)
-  opt = params.slice(:mode, :out, :interval, :raw).tap do |o|
-    o[:aggregate] = !!params[:'no-aggregate']
-  end
+  opt = {}
+  opt[:mode] = params[:mode] if params[:mode]
+  opt[:out] = params[:out] if params[:out]
+  opt[:interval] = params[:interval] if params[:interval]
+  opt[:raw] = params[:raw] if params[:raw]
+  opt[:aggregate] = !!params[:'no-aggregate']
+
   ex = nil
   StackProf.run(opt) do
     begin
