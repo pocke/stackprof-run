@@ -61,7 +61,7 @@ def exec(params)
   opt[:out] = params[:out] if params[:out]
   opt[:interval] = params[:interval] if params[:interval]
   opt[:raw] = params[:raw] if params[:raw]
-  opt[:aggregate] = !!params[:'no-aggregate']
+  opt[:aggregate] = !params[:'no-aggregate']
 
   ex = nil
   StackProf.run(opt) do
